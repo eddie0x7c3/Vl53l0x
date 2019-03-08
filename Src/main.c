@@ -145,7 +145,7 @@ uint8_t buff[10];
 	MyDevice.power_pin 			= GPIO_PIN_3; //tell it what pin you are using as the Xshut pin
 	MyDevice.power_pin_port 	= GPIOC; //port for the Xshut pin
 	MyDevice.ranging_mode 		= HIGH_SPEED; //20ms 
-	MyDevice.interrupt_type		= INTERRUPT_WINDOW;
+	MyDevice.interrupt_type		= INTERRUPT_NONE;
 	MyDevice.interrupt_low_val  = 80;
 	MyDevice.interrupt_high_val  = 200;
 	MyDevice.interrupt_polarity = INTERRUPT_POLARITY_HIGH;
@@ -154,20 +154,20 @@ uint8_t buff[10];
 
 	
 
-  
-  	MyDevice2.comms_speed_khz 	= 400; // the speed you setup i2c to operate at
-	MyDevice2.comms_type 		= I2C;  //I2C or SPI
-	MyDevice2.I2cDevAddr 		= 0x58; //0x52 is defualt address, if using mutliple sensors give it a unique address
-	MyDevice2.I2cHandle 			= &hi2c1; //the handle for your i2c , define by CubeMx hal at the top of main.c 
-	MyDevice2.power_pin 			= GPIO_PIN_2; //tell it what pin you are using as the Xshut pin
-	MyDevice2.power_pin_port 	= GPIOC; //port for the Xshut pin
-	MyDevice2.ranging_mode 		= HIGH_SPEED; //20ms 
-	MyDevice2.interrupt_type	= INTERRUPT_WINDOW;
-	MyDevice2.interrupt_low_val  = 80;
-	MyDevice2.interrupt_high_val  = 200;
-	MyDevice2.interrupt_polarity = INTERRUPT_POLARITY_HIGH;
-	
-	VL53L0x_init(&MyDevice2); // initialize your instance of the the sensor  
+//  
+//  	MyDevice2.comms_speed_khz 	= 400; // the speed you setup i2c to operate at
+//	MyDevice2.comms_type 		= I2C;  //I2C or SPI
+//	MyDevice2.I2cDevAddr 		= 0x58; //0x52 is defualt address, if using mutliple sensors give it a unique address
+//	MyDevice2.I2cHandle 			= &hi2c1; //the handle for your i2c , define by CubeMx hal at the top of main.c 
+//	MyDevice2.power_pin 			= GPIO_PIN_2; //tell it what pin you are using as the Xshut pin
+//	MyDevice2.power_pin_port 	= GPIOC; //port for the Xshut pin
+//	MyDevice2.ranging_mode 		= HIGH_SPEED; //20ms 
+//	MyDevice2.interrupt_type	= INTERRUPT_WINDOW;
+//	MyDevice2.interrupt_low_val  = 80;
+//	MyDevice2.interrupt_high_val  = 200;
+//	MyDevice2.interrupt_polarity = INTERRUPT_POLARITY_HIGH;
+//	
+//	VL53L0x_init(&MyDevice2); // initialize your instance of the the sensor  
 
 	
 
@@ -191,9 +191,9 @@ uint8_t buff[10];
   while (1)
   {
 		
-		sprintf((char *)buff, "----- mm: %d ----- mm: %d\n",  get_distance_mm(&MyDevice),get_distance_mm(&MyDevice2));
+		sprintf((char *)buff, "%d mm : %.2f amb : %.2f ref\n",  get_distance_mm(&MyDevice),get_ambient(&MyDevice2), get_reflectance(&MyDevice));
 		HAL_UART_Transmit(&huart2, buff, strlen((char *)buff), 0xFFFF);
-		if((GPIOC->IDR)&(1<<10)) //MyDevice1 interrupt pin
+		/*if((GPIOC->IDR)&(1<<10)) //MyDevice1 interrupt pin
 		{
 		
 			sprintf((char *)buff, "Int Device 1 : %d\n",  get_distance_mm(&MyDevice));
@@ -213,7 +213,7 @@ uint8_t buff[10];
 			clear_interrupt(&MyDevice2);
 		
 		}
-		
+		*/
 
    
 

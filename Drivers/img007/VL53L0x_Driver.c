@@ -30,7 +30,48 @@ typedef struct {
 	uint16_t power_pin;
 } VL53L0x_setup;
 
+//******************************|  Data related Functions  |*****************************
+uint16_t get_distance_mm(VL53L0X_Dev_t *Device)
+{
 
+	VL53L0X_PerformSingleMeasurement(Device); //faster
+	VL53L0X_GetRangingMeasurementData(Device, &RangingData);
+
+	return RangingData.RangeMilliMeter;
+}
+ float get_reflectance(VL53L0X_Dev_t *Device)
+ {
+	VL53L0X_PerformSingleMeasurement(Device); //faster
+	VL53L0X_GetRangingMeasurementData(Device, &RangingData);
+	return (RangingData.SignalRateRtnMegaCps / 65536.0) ;
+ 
+ }
+ float get_ambient(VL53L0X_Dev_t *Device)
+ {
+	VL53L0X_PerformSingleMeasurement(Device); //faster
+	VL53L0X_GetRangingMeasurementData(Device, &RangingData);
+	return (RangingData.AmbientRateRtnMegaCps / 65336.0 );
+ 
+ }
+ uint8_t get_status(VL53L0X_Dev_t *Device)
+ {
+	return (RangingData.RangeStatus) ;
+ }
+ 
+//******************************|  interupt   |*******************************************
+void clear_interrupt(VL53L0X_Dev_t *Device)
+{
+	VL53L0X_ClearInterruptMask(Device,0x00);
+
+}
+void interrupt_config(VL53L0X_Dev_t *Device,uint8_t interrupt_type, uint8_t interrupt_polarity, uint8_t interrupt_low_val, uint8_t interrupt_high_val) //************************** finish and test
+{
+
+	VL53L0X_SetGpioConfig(Device, 0, VL53L0X_DEVICEMODE_SINGLE_RANGING,interrupt_type,interrupt_polarity);
+	VL53L0X_SetInterruptThresholds(Device,VL53L0X_DEVICEMODE_SINGLE_RANGING,interrupt_low_val<<16,interrupt_high_val<<16);
+}
+
+//******************************|  init / power  |*********************************
 void VL53L0x_init(VL53L0X_Dev_t *Device)
 {
 		//turn on power pin
@@ -101,7 +142,6 @@ void VL53L0x_init(VL53L0X_Dev_t *Device)
 		
 
 }
-
 void VL53L0x_power_off(VL53L0X_Dev_t *Device)
 {
     HAL_GPIO_WritePin(Device->power_pin_port, Device->power_pin, GPIO_PIN_RESET);
@@ -110,26 +150,6 @@ void VL53L0x_power_on(VL53L0X_Dev_t *Device)
 {	 
 		VL53L0x_init(Device);	
 }
-uint16_t get_distance_mm(VL53L0X_Dev_t *Device)
-{
 
-	//VL53L0X_WaitDeviceReadyForNewMeasurement(Device, 500); Not implemented in ST_API for VL53l0x
-
-	VL53L0X_PerformSingleMeasurement(Device); //faster
-	VL53L0X_GetRangingMeasurementData(Device, &RangingData);
-
-	return RangingData.RangeMilliMeter;
-}
-void interrupt_config(VL53L0X_Dev_t *Device,uint8_t interrupt_type, uint8_t interrupt_polarity, uint8_t interrupt_low_val, uint8_t interrupt_high_val) //************************** finish and test
-{
-
-	VL53L0X_SetGpioConfig(Device, 0, VL53L0X_DEVICEMODE_SINGLE_RANGING,interrupt_type,interrupt_polarity);
-	VL53L0X_SetInterruptThresholds(Device,VL53L0X_DEVICEMODE_SINGLE_RANGING,interrupt_low_val<<16,interrupt_high_val<<16);
-}
-void clear_interrupt(VL53L0X_Dev_t *Device)
-{
-	VL53L0X_ClearInterruptMask(Device,0x00);
-
-}
 
 
