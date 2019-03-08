@@ -1,0 +1,1 @@
+sensor_proj_stm32l053\startup_stm32l053xx.o: startup_stm32l053xx.s

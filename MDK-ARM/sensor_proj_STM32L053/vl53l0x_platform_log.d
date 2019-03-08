@@ -1,0 +1,11 @@
+sensor_proj_stm32l053\vl53l0x_platform_log.o: ..\Drivers\img007\vl53l0x_platform_log.c
+sensor_proj_stm32l053\vl53l0x_platform_log.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+sensor_proj_stm32l053\vl53l0x_platform_log.o: ..\Drivers\img007\vl53l0x_i2c_platform.h
+sensor_proj_stm32l053\vl53l0x_platform_log.o: ..\Drivers\img007\vl53l0x_def.h
+sensor_proj_stm32l053\vl53l0x_platform_log.o: ..\Drivers\img007\vl53l0x_device.h
+sensor_proj_stm32l053\vl53l0x_platform_log.o: ..\Drivers\img007\vl53l0x_types.h
+sensor_proj_stm32l053\vl53l0x_platform_log.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+sensor_proj_stm32l053\vl53l0x_platform_log.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+sensor_proj_stm32l053\vl53l0x_platform_log.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+sensor_proj_stm32l053\vl53l0x_platform_log.o: ..\Drivers\img007\vl53l0x_platform_log.h
+sensor_proj_stm32l053\vl53l0x_platform_log.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
