@@ -145,8 +145,9 @@ uint8_t buff[10];
 	MyDevice.power_pin 			= GPIO_PIN_3; //tell it what pin you are using as the Xshut pin
 	MyDevice.power_pin_port 	= GPIOC; //port for the Xshut pin
 	MyDevice.ranging_mode 		= HIGH_SPEED; //20ms 
-	MyDevice.interrupt_type		= INTERRUPT_NONE;
-	MyDevice.interrupt_low_val  = 200;
+	MyDevice.interrupt_type		= INTERRUPT_WINDOW;
+	MyDevice.interrupt_low_val  = 80;
+	MyDevice.interrupt_high_val  = 200;
 	MyDevice.interrupt_polarity = INTERRUPT_POLARITY_HIGH;
 	
 	VL53L0x_init(&MyDevice); // initialize your instance of the the sensor  
@@ -192,6 +193,26 @@ uint8_t buff[10];
 		
 		sprintf((char *)buff, "----- mm: %d ----- mm: %d\n",  get_distance_mm(&MyDevice),get_distance_mm(&MyDevice2));
 		HAL_UART_Transmit(&huart2, buff, strlen((char *)buff), 0xFFFF);
+		if((GPIOC->IDR)&(1<<10)) //MyDevice1 interrupt pin
+		{
+		
+			sprintf((char *)buff, "Int Device 1 : %d\n",  get_distance_mm(&MyDevice));
+			HAL_UART_Transmit(&huart2, buff, strlen((char *)buff), 0xFFFF);
+			HAL_Delay(2000);
+
+			clear_interrupt(&MyDevice);
+		
+		}
+		if((GPIOC->IDR)&(1<<12)) //MyDevice1 interrupt pin
+		{
+		
+			sprintf((char *)buff, "Int Device 2 : %d\n",  get_distance_mm(&MyDevice2));
+			HAL_UART_Transmit(&huart2, buff, strlen((char *)buff), 0xFFFF);
+			HAL_Delay(2000);
+
+			clear_interrupt(&MyDevice2);
+		
+		}
 		
 
    
@@ -352,6 +373,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PC10 PC12 */
+  GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_12;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 }
